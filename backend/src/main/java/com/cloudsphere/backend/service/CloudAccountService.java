@@ -1,6 +1,7 @@
 package com.cloudsphere.backend.service;
 
 import com.cloudsphere.backend.entity.CloudAccount;
+import com.cloudsphere.backend.exception.ResourceNotFoundException;
 import com.cloudsphere.backend.repository.CloudAccountRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,25 +25,35 @@ public class CloudAccountService {
     }
 
     public CloudAccount getAccountById(Long id) {
-    return cloudAccountRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Cloud Account not found with id: " + id));
+        return cloudAccountRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Cloud Account not found with id: " + id));
     }
 
     public CloudAccount updateAccount(Long id, CloudAccount updatedAccount) {
 
-    CloudAccount existingAccount = cloudAccountRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Cloud Account not found with id: " + id));
+        CloudAccount existingAccount = cloudAccountRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Cloud Account not found with id: " + id));
 
-    existingAccount.setAccountName(updatedAccount.getAccountName());
-    existingAccount.setProvider(updatedAccount.getProvider());
-    existingAccount.setAccountIdentifier(updatedAccount.getAccountIdentifier());
-    existingAccount.setRegion(updatedAccount.getRegion());
-    existingAccount.setStatus(updatedAccount.getStatus());
+        existingAccount.setAccountName(updatedAccount.getAccountName());
+        existingAccount.setProvider(updatedAccount.getProvider());
+        existingAccount.setAccountIdentifier(updatedAccount.getAccountIdentifier());
+        existingAccount.setRegion(updatedAccount.getRegion());
+        existingAccount.setStatus(updatedAccount.getStatus());
 
-    return cloudAccountRepository.save(existingAccount);
+        return cloudAccountRepository.save(existingAccount);
     }
 
     public void deleteAccount(Long id) {
-    cloudAccountRepository.deleteById(id);
+
+        CloudAccount account = cloudAccountRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Cloud Account not found with id: " + id));
+
+        cloudAccountRepository.delete(account);
     }
 }

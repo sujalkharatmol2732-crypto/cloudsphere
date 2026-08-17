@@ -3,6 +3,8 @@ package com.cloudsphere.backend.controller;
 import com.cloudsphere.backend.entity.CloudAccount;
 import com.cloudsphere.backend.service.CloudAccountService;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +22,7 @@ public class CloudAccountController {
 
     @PostMapping
     public ResponseEntity<CloudAccount> createAccount(
-            @RequestBody CloudAccount cloudAccount) {
+            @Valid @RequestBody CloudAccount cloudAccount) {
 
         CloudAccount savedAccount =
                 cloudAccountService.createAccount(cloudAccount);
@@ -48,7 +50,7 @@ public ResponseEntity<CloudAccount> getAccountById(@PathVariable Long id) {
     @PutMapping("/{id}")
 public ResponseEntity<CloudAccount> updateAccount(
         @PathVariable Long id,
-        @RequestBody CloudAccount cloudAccount) {
+        @Valid @RequestBody CloudAccount cloudAccount) {
 
     CloudAccount updatedAccount =
             cloudAccountService.updateAccount(id, cloudAccount);

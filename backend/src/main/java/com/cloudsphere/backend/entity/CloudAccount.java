@@ -1,6 +1,9 @@
 package com.cloudsphere.backend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "cloud_accounts")
@@ -10,17 +13,28 @@ public class CloudAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Provider is required")
     @Column(nullable = false)
     private String provider;
 
+    @NotBlank(message = "Account Name is required")
+    @Size(min = 3, max = 100,
+      message = "Account Name must be between 3 and 100 characters")
     @Column(name = "account_name", nullable = false)
     private String accountName;
 
+    @NotBlank(message = "Account Identifier is required")
+    @Pattern(
+    regexp = "^[A-Za-z0-9_-]{6,20}$",
+    message = "Account Identifier must contain 6-20 letters, numbers, _ or -"
+    )
     @Column(name = "account_identifier")
     private String accountIdentifier;
-
+    
+    @NotBlank(message = "Region is required")
     private String region;
 
+    @NotBlank(message = "Status is required")
     @Column(nullable = false)
     private String status;
 
